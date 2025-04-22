@@ -89,4 +89,36 @@ public class Gestor {
         }
     }
 
+    // Método para consultar clientes
+    public ArrayList<Cliente> consultarClientes() {
+        ArrayList<Cliente> listaClientes = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM Clientes";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int idCliente = rs.getInt("id");
+                String nombre = rs.getString("nombre");
+                String apellido = rs.getString("apellido");
+                String telefono = rs.getString("telefono");
+
+                Cliente c = new Cliente(idCliente, nombre, apellido, telefono);
+                listaClientes.add(c);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return listaClientes;
+    }
+
+    // Centralización del método volver
+    public void volverMenu(Gestor gestor) {
+        MenuPrincipal mp = new MenuPrincipal(gestor);
+        mp.setVisible(true);
+        mp.setLocationRelativeTo(null);
+
+    }
+
 }
