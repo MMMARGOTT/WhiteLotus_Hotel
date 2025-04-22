@@ -113,6 +113,45 @@ public class Gestor {
         return listaClientes;
     }
 
+    // Método para consultar habitaciones
+    public ArrayList<Habitacion> consultarHabitaciones() {
+        ArrayList<Habitacion> listaHabitaciones = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM Habitaciones";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int idHabitacion = rs.getInt("id");
+                int numero = rs.getInt("numero");
+                TipoHabitacion tipo = TipoHabitacion.valueOf(rs.getString("tipo"));
+                double precioNoche = rs.getDouble("precio_noche");
+
+                Habitacion h = new Habitacion(idHabitacion, numero, tipo, precioNoche);
+                listaHabitaciones.add(h);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return listaHabitaciones;
+    }
+
+    // Método que elimina las reservas canceladas
+    public void eliminarReservasCanceladas() {
+        try {
+            String sql = "DELETE FROM Reservas WHERE estado = 'CANCELADA'";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            int reservasEliminadas = stmt.executeUpdate();
+
+            if (reservasEliminadas > 0) {
+                JOptionPane.showMessageDialog(null, "Reservas canceladas eliminadas con éxito.");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+        }
+    }
+
     // Centralización del método volver
     public void volverMenu(Gestor gestor) {
         MenuPrincipal mp = new MenuPrincipal(gestor);
